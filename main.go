@@ -8,6 +8,45 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type Request struct {
+	ID        int
+	IP        string
+	Method    string
+	Path      string
+	Timestamp string
+}
+
+func insertRequest(db *sql.DB, ip, method, path string) {
+	_, err := db.Exec(
+		"INSERT INTO requests (ip, method, path) VALUES ($1, $2, $3)",
+		ip, method, path,
+	)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func getAllRequests(db *sql.DB) []Request {
+	rows, err := db.Query("SELECT id, ip, method, path, timestamp FROM requests ORDER BY id DESC")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+
+	var results []Request
+
+	for rows.Next() {
+		var r Request
+		err := rows.Scan(&r.ID, &r.IP, &r.Method, &r.Path, &r.Timestamp)
+		if err != nil {
+			log.Fatal(err)
+		}
+		results = append(results, r)
+	}
+
+	return results
+}
+
 func main() {
 	connStr := "host=localhost port=5433 user=postgres password=12345678 dbname=mirage sslmode=disable"
 
@@ -24,38 +63,18 @@ func main() {
 
 	fmt.Println("Connected to Mirage database.")
 
-	createTable := `
-	CREATE TABLE IF NOT EXISTS requests (
-		id        SERIAL PRIMARY KEY,
-		ip        TEXT NOT NULL,
-		method    TEXT NOT NULL,
-		path      TEXT NOT NULL,
-		timestamp TIMESTAMP DEFAULT NOW()
-	);`
+	insertRequest(db, "10.0.0.1", "POST", "/login")
+	insertRequest(db, "172.16.0.5", "GET", "/etc/passwd")
+	insertRequest(db, "192.168.1.100", "GET", "/wp-admin")
 
-	_, err = db.Exec(createTable)
-	if err != nil {
-		log.Fatal(err)
+	fmt.Println("Inserted 3 requests.")
+
+	requests := getAllRequests(db)
+
+	fmt.Printf("\n%-5s %-15s %-8s %-20s %s\n", "ID", "IP", "Method", "Path", "Timestamp")
+	fmt.Println("---------------------------------------------------------------")
+
+	for _, r := range requests {
+		fmt.Printf("%-5d %-15s %-8s %-20s %s\n", r.ID, r.IP, r.Method, r.Path, r.Timestamp)
 	}
-
-	fmt.Println("Table ready.")
-
-	_, err = db.Exec(
-		"INSERT INTO requests (ip, method, path) VALUES ($1, $2, $3)",
-		"192.168.1.1", "GET", "/admin",
-	)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Println("Row inserted.")
-
-	var ip, method, path string
-	row := db.QueryRow("SELECT ip, method, path FROM requests ORDER BY id DESC LIMIT 1")
-	err = row.Scan(&ip, &method, &path)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	fmt.Printf("Last request -> IP: %s | Method: %s | Path: %s\n", ip, method, path)
 }
