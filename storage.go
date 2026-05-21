@@ -7,7 +7,7 @@ import (
 
 type Store interface {
 	Insert(ip, method, path string)
-	GetAll() []Request
+	GetAll() ([]Request, error)
 }
 
 type PostgresStore struct {
@@ -28,10 +28,10 @@ func (s *PostgresStore) Insert(ip, method, path string) {
 	}
 }
 
-func (s *PostgresStore) GetAll() []Request {
+func (s *PostgresStore) GetAll() ([]Request, error) {
 	rows, err := s.db.Query("SELECT id, ip, method, path, timestamp FROM requests ORDER BY id DESC")
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	defer rows.Close()
 
@@ -41,10 +41,10 @@ func (s *PostgresStore) GetAll() []Request {
 		var r Request
 		err := rows.Scan(&r.ID, &r.IP, &r.Method, &r.Path, &r.Timestamp)
 		if err != nil {
-			log.Fatal(err)
+			return nil, err
 		}
 		results = append(results, r)
 	}
 
-	return results
+	return results, nil
 }
