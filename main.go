@@ -9,11 +9,12 @@ import (
 )
 
 type Request struct {
-	ID        int
-	IP        string
-	Method    string
-	Path      string
-	Timestamp string
+	ID        int    `json:"id"`
+	IP        string `json:"ip"`
+	Method    string `json:"method"`
+	Path      string `json:"path"`
+	Timestamp string `json:"timestamp"`
+	Severity  string `json:"-"`
 }
 
 func main() {

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirage — Admin</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background: #0c0e13;
+            color: #9a9da6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 13px;
+        }
+
+        .topbar {
+            background: #0f1117;
+            border-bottom: 1px solid #2a2d36;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e24b4a;
+        }
+
+        .logo-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #e8e8e6;
+            letter-spacing: 0.08em;
+        }
+
+        .logo-sub {
+            font-size: 11px;
+            color: #444651;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 11px;
+            color: #104e0f;
+            background: #e1ebd3;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #639922;
+        }
+
+        .content {
+            padding: 24px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .metric {
+            background: #13161e;
+            border: 1px solid #2a2d36;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            color: #555860;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 8px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 500;
+            color: #e8e8e6;
+        }
+
+        .section-label {
+            font-size: 10px;
+            color: #555860;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 12px;
+        }
+
+        .table-wrap {
+            background: #13161e;
+            border: 1px solid #2a2d36;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            border-bottom: 1px solid #2a2d36;
+        }
+
+        th {
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 10px;
+            font-weight: 500;
+            color: #555860;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+        }
+
+        td {
+            padding: 10px 16px;
+            border-bottom: 1px solid #1c1f27;
+            color: #9a9da6;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: #181b23; }
+
+        .id-cell { color: #444651; font-size: 11px; }
+
+        .ip-cell {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #e8e8e6;
+        }
+
+        .method-badge {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .method-get {
+            color: #378add;
+            background: #0c0e13;
+            border: 1px solid #185fa5;
+        }
+
+        .method-post {
+            color: #ef9f27;
+            background: #0c0e13;
+            border: 1px solid #854f0b;
+        }
+
+        .method-other {
+            color: #9a9da6;
+            background: #0c0e13;
+            border: 1px solid #2a2d36;
+        }
+
+        .path-danger { color: #e24b4a; }
+        .path-warn   { color: #ef9f27; }
+        .path-normal { color: #9a9da6; }
+
+        .ts-cell {
+            font-size: 11px;
+            color: #444651;
+            font-family: 'Courier New', monospace;
+        }
+
+        .empty-state {
+            padding: 48px;
+            text-align: center;
+            color: #444651;
+        }
+    </style>
+</head>
+<body>
+
+<div class="topbar">
+    <div class="logo">
+        <div class="logo-dot"></div>
+        <span class="logo-text">MIRAGE</span>
+        <span class="logo-sub">&nbsp;admin</span>
+    </div>
+    <div class="live-badge">
+        <div class="live-dot"></div>
+        listening
+    </div>
+</div>
+
+<div class="content">
+
+    <div class="metrics">
+        <div class="metric">
+            <div class="metric-label">Total Probes</div>
+            <div class="metric-value">—</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">Unique IPs</div>
+            <div class="metric-value">—</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">Top Path</div>
+            <div class="metric-value" style="font-size: 14px; margin-top: 6px;">—</div>
+        </div>
+    </div>
+
+    <div class="section-label">Captured Requests</div>
+
+    <div class="table-wrap">
+        {{ if . }}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>IP Address</th>
+                    <th>Method</th>
+                    <th>Path</th>
+                    <th>Timestamp</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range . }}
+                <tr>
+                    <td class="id-cell">{{ .ID }}</td>
+                    <td class="ip-cell">{{ .IP }}</td>
+                    <td>
+                        {{ if eq .Method "GET" }}
+                            <span class="method-badge method-get">GET</span>
+                        {{ else if eq .Method "POST" }}
+                            <span class="method-badge method-post">POST</span>
+                        {{ else }}
+                            <span class="method-badge method-other">{{ .Method }}</span>
+                        {{ end }}
+                    </td>
+                    <td class="{{ if eq .Severity "danger" }}path-danger{{ else if eq .Severity "warn" }}path-warn{{ else }}path-normal{{ end }}">
+                        {{ .Path }}
+                    </td>
+                    <td class="ts-cell">{{ .Timestamp }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+        {{ else }}
+        <div class="empty-state">No requests captured yet.</div>
+        {{ end }}
+    </div>
+
+</div>
+
+</body>
+</html>

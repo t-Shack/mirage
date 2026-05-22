@@ -1,11 +1,13 @@
 package main
 
 import (
-	"encoding/json"
+	_ "encoding/json"
 	"fmt"
+	"html/template"
 	"log"
 	"net"
 	"net/http"
+	"strings"
 )
 
 type Server struct {
@@ -31,7 +33,7 @@ func (s *Server) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintln(w, "<html><body><h1>Welcome to Mirage!</h1></body></html>")
+	fmt.Fprintln(w, "<html><body><h1>Welcome</h1></body></html>")
 }
 
 func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
@@ -41,11 +43,44 @@ func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
-	err = json.NewEncoder(w).Encode(requests)
-	if err != nil {
-		log.Printf("Failed to encode response: %s", err)
+	for i := range requests {
+		requests[i].Severity = classifyPath(requests[i].Path)
 	}
+
+	tmpl, err := template.ParseFiles("templates/admin.html")
+	if err != nil {
+		http.Error(w, "Template error", http.StatusInternalServerError)
+		log.Printf("Template parse error: %s", err)
+		return
+	}
+
+	err = tmpl.Execute(w, requests)
+	if err != nil {
+		log.Printf("Template execute error: %s", err)
+	}
+}
+
+func classifyPath(path string) string {
+	dangerous := []string{
+		"/etc/passwd", "/etc/shadow", "/.env",
+		"/wp-config", "/.git", "/config",
+	}
+	suspicious := []string{
+		"/admin", "/login", "/wp-admin",
+		"/phpmyadmin", "/secret", "/backup",
+	}
+
+	for _, d := range dangerous {
+		if strings.Contains(path, d) {
+			return "danger"
+		}
+	}
+	for _, s := range suspicious {
+		if strings.Contains(path, s) {
+			return "warn"
+		}
+	}
+	return "normal"
 }
 
 func (s *Server) Start(port string) {
