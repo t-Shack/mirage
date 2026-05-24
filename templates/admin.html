@@ -23,59 +23,23 @@
             justify-content: space-between;
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #e24b4a;
-        }
-
-        .logo-text {
-            font-size: 14px;
-            font-weight: 600;
-            color: #e8e8e6;
-            letter-spacing: 0.08em;
-        }
-
-        .logo-sub {
-            font-size: 11px;
-            color: #444651;
-        }
+        .logo { display: flex; align-items: center; gap: 8px; }
+        .logo-dot { width: 8px; height: 8px; border-radius: 50%; background: #e24b4a; }
+        .logo-text { font-size: 14px; font-weight: 600; color: #e8e8e6; letter-spacing: 0.08em; }
+        .logo-sub { font-size: 11px; color: #444651; }
 
         .live-badge {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 11px;
-            color: #104e0f;
-            background: #e1ebd3;
-            padding: 3px 10px;
-            border-radius: 20px;
+            display: flex; align-items: center; gap: 6px;
+            font-size: 11px; color: #3b6d11;
+            background: #eaf3de; padding: 3px 10px; border-radius: 20px;
         }
+        .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #639922; }
 
-        .live-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: #639922;
-        }
-
-        .content {
-            padding: 24px;
-            max-width: 1100px;
-            margin: 0 auto;
-        }
+        .content { padding: 24px; max-width: 1100px; margin: 0 auto; }
 
         .metrics {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 12px;
             margin-bottom: 24px;
         }
@@ -88,25 +52,54 @@
         }
 
         .metric-label {
-            font-size: 10px;
-            color: #555860;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            margin-bottom: 8px;
+            font-size: 10px; color: #555860;
+            text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px;
         }
 
-        .metric-value {
-            font-size: 24px;
-            font-weight: 500;
-            color: #e8e8e6;
+        .metric-value { font-size: 24px; font-weight: 500; color: #e8e8e6; }
+        .metric-value.amber { color: #ef9f27; }
+        .metric-value.red { font-size: 14px; margin-top: 6px; color: #e24b4a; }
+
+        .filter-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            align-items: center;
         }
+
+        .filter-bar input,
+        .filter-bar select {
+            background: #13161e;
+            border: 1px solid #2a2d36;
+            border-radius: 6px;
+            color: #e8e8e6;
+            padding: 7px 12px;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .filter-bar input::placeholder { color: #444651; }
+
+        .filter-bar input:focus,
+        .filter-bar select:focus { border-color: #444651; }
+
+        .btn {
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            border: 1px solid #2a2d36;
+            background: #1e2029;
+            color: #e8e8e6;
+            text-decoration: none;
+        }
+
+        .btn:hover { background: #2a2d36; }
+        .btn-clear { color: #555860; }
 
         .section-label {
-            font-size: 10px;
-            color: #555860;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            margin-bottom: 12px;
+            font-size: 10px; color: #555860;
+            text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 12px;
         }
 
         .table-wrap {
@@ -116,83 +109,46 @@
             overflow: hidden;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead tr {
-            border-bottom: 1px solid #2a2d36;
-        }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { border-bottom: 1px solid #2a2d36; }
 
         th {
-            padding: 10px 16px;
-            text-align: left;
-            font-size: 10px;
-            font-weight: 500;
-            color: #555860;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
+            padding: 10px 16px; text-align: left;
+            font-size: 10px; font-weight: 500; color: #555860;
+            text-transform: uppercase; letter-spacing: 0.07em;
         }
 
-        td {
-            padding: 10px 16px;
-            border-bottom: 1px solid #1c1f27;
-            color: #9a9da6;
-        }
-
+        td { padding: 10px 16px; border-bottom: 1px solid #1c1f27; color: #9a9da6; }
         tr:last-child td { border-bottom: none; }
         tr:hover td { background: #181b23; }
 
         .id-cell { color: #444651; font-size: 11px; }
-
-        .ip-cell {
-            font-family: 'Courier New', monospace;
-            font-size: 12px;
-            color: #e8e8e6;
-        }
+        .ip-cell { font-family: 'Courier New', monospace; font-size: 12px; color: #e8e8e6; }
 
         .method-badge {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 4px;
+            display: inline-block; font-size: 10px; font-weight: 600;
+            padding: 2px 8px; border-radius: 4px;
         }
-
-        .method-get {
-            color: #378add;
-            background: #0c0e13;
-            border: 1px solid #185fa5;
-        }
-
-        .method-post {
-            color: #ef9f27;
-            background: #0c0e13;
-            border: 1px solid #854f0b;
-        }
-
-        .method-other {
-            color: #9a9da6;
-            background: #0c0e13;
-            border: 1px solid #2a2d36;
-        }
+        .method-get  { color: #378add; background: #0c0e13; border: 1px solid #185fa5; }
+        .method-post { color: #ef9f27; background: #0c0e13; border: 1px solid #854f0b; }
+        .method-other { color: #9a9da6; background: #0c0e13; border: 1px solid #2a2d36; }
 
         .path-danger { color: #e24b4a; }
         .path-warn   { color: #ef9f27; }
         .path-normal { color: #9a9da6; }
 
-        .ts-cell {
-            font-size: 11px;
-            color: #444651;
-            font-family: 'Courier New', monospace;
+        .ts-cell { font-size: 11px; color: #444651; font-family: 'Courier New', monospace; }
+
+        .empty-state { padding: 48px; text-align: center; color: #444651; }
+
+        .pagination {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px;
+            border-top: 1px solid #2a2d36;
         }
 
-        .empty-state {
-            padding: 48px;
-            text-align: center;
-            color: #444651;
-        }
+        .page-info { font-size: 11px; color: #444651; }
+        .page-controls { display: flex; gap: 8px; }
     </style>
 </head>
 <body>
@@ -214,22 +170,40 @@
     <div class="metrics">
         <div class="metric">
             <div class="metric-label">Total Probes</div>
-            <div class="metric-value">—</div>
+            <div class="metric-value">{{ .Stats.TotalProbes }}</div>
+        </div>
+        <div class="metric">
+            <div class="metric-label">Last 24 Hours</div>
+            <div class="metric-value amber">{{ .Stats.Last24h }}</div>
         </div>
         <div class="metric">
             <div class="metric-label">Unique IPs</div>
-            <div class="metric-value">—</div>
+            <div class="metric-value">{{ .Stats.UniqueIPs }}</div>
         </div>
         <div class="metric">
             <div class="metric-label">Top Path</div>
-            <div class="metric-value" style="font-size: 14px; margin-top: 6px;">—</div>
+            <div class="metric-value red">{{ if .Stats.TopPath }}{{ .Stats.TopPath }}{{ else }}—{{ end }}</div>
         </div>
     </div>
 
     <div class="section-label">Captured Requests</div>
 
+    <form class="filter-bar" method="GET" action="/admin">
+        <input type="text" name="ip" value="{{ .IP }}" placeholder="Filter by IP">
+        <select name="method">
+            <option value="">All methods</option>
+            <option value="GET"  {{ if eq .Method "GET"  }}selected{{ end }}>GET</option>
+            <option value="POST" {{ if eq .Method "POST" }}selected{{ end }}>POST</option>
+            <option value="PUT"  {{ if eq .Method "PUT"  }}selected{{ end }}>PUT</option>
+            <option value="DELETE" {{ if eq .Method "DELETE" }}selected{{ end }}>DELETE</option>
+        </select>
+        <input type="text" name="path" value="{{ .Path }}" placeholder="Filter by path">
+        <button class="btn" type="submit">Search</button>
+        <a class="btn btn-clear" href="/admin">Clear</a>
+    </form>
+
     <div class="table-wrap">
-        {{ if . }}
+        {{ if .Requests }}
         <table>
             <thead>
                 <tr>
@@ -241,7 +215,7 @@
                 </tr>
             </thead>
             <tbody>
-                {{ range . }}
+                {{ range .Requests }}
                 <tr>
                     <td class="id-cell">{{ .ID }}</td>
                     <td class="ip-cell">{{ .IP }}</td>
@@ -262,12 +236,22 @@
                 {{ end }}
             </tbody>
         </table>
+        <div class="pagination">
+            <span class="page-info">Page {{ .Page }}</span>
+            <div class="page-controls">
+                {{ if .HasPrev }}
+                    <a class="btn" href="/admin?page={{ .PrevPage }}&ip={{ .IP }}&method={{ .Method }}&path={{ .Path }}">← Prev</a>
+                {{ end }}
+                {{ if .HasNext }}
+                    <a class="btn" href="/admin?page={{ .NextPage }}&ip={{ .IP }}&method={{ .Method }}&path={{ .Path }}">Next →</a>
+                {{ end }}
+            </div>
+        </div>
         {{ else }}
-        <div class="empty-state">No requests captured yet.</div>
+        <div class="empty-state">No requests found.</div>
         {{ end }}
     </div>
 
 </div>
-
 </body>
 </html>

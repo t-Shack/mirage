@@ -1,17 +1,30 @@
 package main
 
 import (
-	_ "encoding/json"
 	"fmt"
 	"html/template"
 	"log"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
 type Server struct {
 	store Store
+}
+
+type AdminPageData struct {
+	Requests []Request
+	Stats    Stats
+	IP       string
+	Method   string
+	Path     string
+	Page     int
+	PrevPage int
+	NextPage int
+	HasNext  bool
+	HasPrev  bool
 }
 
 func NewServer(store Store) *Server {
@@ -37,14 +50,45 @@ func (s *Server) handleRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
-	requests, err := s.store.GetAll()
+	ip := r.URL.Query().Get("ip")
+	method := r.URL.Query().Get("method")
+	path := r.URL.Query().Get("path")
+
+	page := 1
+	if p, err := strconv.Atoi(r.URL.Query().Get("page")); err == nil && p > 0 {
+		page = p
+	}
+
+	const limit = 25
+	offset := (page - 1) * limit
+
+	filter := Filter{
+		IP:     ip,
+		Method: method,
+		Path:   path,
+		Limit:  limit + 1,
+		Offset: offset,
+	}
+
+	requests, err := s.store.GetAll(filter)
 	if err != nil {
 		http.Error(w, "Failed to fetch requests", http.StatusInternalServerError)
 		return
 	}
 
+	hasNext := len(requests) > limit
+	if hasNext {
+		requests = requests[:limit]
+	}
+
 	for i := range requests {
 		requests[i].Severity = classifyPath(requests[i].Path)
+	}
+
+	stats, err := s.store.GetStats()
+	if err != nil {
+		http.Error(w, "Failed to fetch stats", http.StatusInternalServerError)
+		return
 	}
 
 	tmpl, err := template.ParseFiles("templates/admin.html")
@@ -54,7 +98,20 @@ func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.Execute(w, requests)
+	data := AdminPageData{
+		Requests: requests,
+		Stats:    stats,
+		IP:       ip,
+		Method:   method,
+		Path:     path,
+		Page:     page,
+		PrevPage: page - 1,
+		NextPage: page + 1,
+		HasNext:  hasNext,
+		HasPrev:  page > 1,
+	}
+
+	err = tmpl.Execute(w, data)
 	if err != nil {
 		log.Printf("Template execute error: %s", err)
 	}
