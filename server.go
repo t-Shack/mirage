@@ -46,7 +46,7 @@ func (s *Server) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintln(w, "<html><body><h1>Welcome</h1></body></html>")
+	fmt.Fprintln(w, "<html><body style=\"background: #0c0e13; color: #9a9da6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px;\"><h1>Welcome pussy!</h1></body></html>")
 }
 
 func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,7 @@ func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		page = p
 	}
 
-	const limit = 25
+	const limit = 20
 	offset := (page - 1) * limit
 
 	filter := Filter{
