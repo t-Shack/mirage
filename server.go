@@ -140,7 +140,13 @@ func classifyPath(path string) string {
 	return "normal"
 }
 
+func (s *Server) handleFavicon(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "static/favicon.ico")
+}
+
 func (s *Server) Start(port string) {
+	http.HandleFunc("/static/favicon.ico", s.handleFavicon)
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.HandleFunc("/admin", s.handleAdmin)
 	http.HandleFunc("/", s.handleRequest)
 

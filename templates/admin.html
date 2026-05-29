@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mirage — Admin</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -58,7 +59,9 @@
 
         .metric-value { font-size: 24px; font-weight: 500; color: #e8e8e6; }
         .metric-value.amber { color: #ef9f27; }
-        .metric-value.red { font-size: 14px; margin-top: 6px; color: #e24b4a; }
+        .metric-value.red { font-size: 14px; margin: 8px 0px; color: #e24b4a; }
+
+        .metric-description { font-size: 10px; text-transform: lowercase; color: #555860; }
 
         .filter-bar {
             display: flex;
@@ -156,7 +159,9 @@
 <div class="topbar">
     <div class="logo">
         <div class="logo-dot"></div>
-        <span class="logo-text">MIRAGE</span>
+        <a href="/admin" style="text-decoration: none;">
+            <span class="logo-text">MIRAGE</span>
+        </a>
         <span class="logo-sub">&nbsp;admin</span>
     </div>
     <div class="live-badge">
@@ -171,18 +176,22 @@
         <div class="metric">
             <div class="metric-label">Total Probes</div>
             <div class="metric-value">{{ .Stats.TotalProbes }}</div>
+            <div class="metric-description">all time</div>
         </div>
         <div class="metric">
             <div class="metric-label">Last 24 Hours</div>
             <div class="metric-value amber">{{ .Stats.Last24h }}</div>
+            <div class="metric-description">requests</div>
         </div>
         <div class="metric">
             <div class="metric-label">Unique IPs</div>
             <div class="metric-value">{{ .Stats.UniqueIPs }}</div>
+            <div class="metric-description">distinct sources</div>
         </div>
         <div class="metric">
             <div class="metric-label">Top Path</div>
             <div class="metric-value red">{{ if .Stats.TopPath }}{{ .Stats.TopPath }}{{ else }}—{{ end }}</div>
+            <div class="metric-description">most probed</div>
         </div>
     </div>
 
