@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"html/template"
 	"log"
@@ -11,9 +12,10 @@ import (
 )
 
 type Server struct {
-	store Store
+	store    Store
+	username string
+	password string
 }
-
 type AdminPageData struct {
 	Requests []Request
 	Stats    Stats
@@ -27,8 +29,49 @@ type AdminPageData struct {
 	HasPrev  bool
 }
 
-func NewServer(store Store) *Server {
-	return &Server{store: store}
+func NewServer(store Store, username, password string) *Server {
+	return &Server{
+		store:    store,
+		username: username,
+		password: password,
+	}
+}
+
+func (s *Server) basicAuth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			w.Header().Set("WWW-Authenticate", `Basic realm="Mirage Admin"`)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		parts := strings.SplitN(authHeader, " ", 2)
+		if len(parts) != 2 || parts[0] != "Basic" {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		decoded, err := base64.StdEncoding.DecodeString(parts[1])
+		if err != nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		credentials := strings.SplitN(string(decoded), ":", 2)
+		if len(credentials) != 2 {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		if credentials[0] != s.username || credentials[1] != s.password {
+			w.Header().Set("WWW-Authenticate", `Basic realm="Mirage Admin"`)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
 }
 
 func (s *Server) handleRequest(w http.ResponseWriter, r *http.Request) {
@@ -46,7 +89,7 @@ func (s *Server) handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
-	fmt.Fprintln(w, "<html><body style=\"background: #0c0e13; color: #9a9da6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px;\"><h1>Welcome pussy!</h1></body></html>")
+	fmt.Fprintln(w, "<html><body style=\"background: #0c0e13; color: #9a9da6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; font-size: 13px;\"><h1>Welcome Pussy!</h1></body></html>")
 }
 
 func (s *Server) handleAdmin(w http.ResponseWriter, r *http.Request) {
@@ -145,9 +188,11 @@ func (s *Server) handleFavicon(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) Start(port string) {
+	adminHandler := http.HandlerFunc(s.handleAdmin)
+
 	http.HandleFunc("/static/favicon.ico", s.handleFavicon)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.HandleFunc("/admin", s.handleAdmin)
+	http.Handle("/admin", s.basicAuth(adminHandler))
 	http.HandleFunc("/", s.handleRequest)
 
 	log.Printf("Mirage listening on port %s", port)

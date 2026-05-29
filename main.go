@@ -34,6 +34,6 @@ func main() {
 	fmt.Println("Mirage is live.")
 
 	store := NewPostgresStore(db)
-	server := NewServer(store)
+	server := NewServer(store, "admin", "mirage@123")
 	server.Start("8080")
 }
