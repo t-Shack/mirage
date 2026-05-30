@@ -18,7 +18,12 @@ type Request struct {
 }
 
 func main() {
-	connStr := "host=localhost port=5433 user=postgres password=12345678 dbname=mirage sslmode=disable"
+	cfg := LoadConfig()
+
+	connStr := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName,
+	)
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
@@ -34,6 +39,6 @@ func main() {
 	fmt.Println("Mirage is live.")
 
 	store := NewPostgresStore(db)
-	server := NewServer(store, "admin", "mirage@123")
-	server.Start("8080")
+	server := NewServer(store, cfg.AdminUsername, cfg.AdminPassword)
+	server.Start(cfg.ServerPort)
 }
