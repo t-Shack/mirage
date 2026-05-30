@@ -30,7 +30,7 @@ func LoadConfig() Config {
 		DBUser:        getEnv("DB_USER", "postgres"),
 		DBPassword:    getEnv("DB_PASSWORD", ""),
 		DBName:        getEnv("DB_NAME", "mirage"),
-		ServerPort:    getEnv("SERVER_PORT", "8080"),
+		ServerPort:    getEnv("PORT", getEnv("SERVER_PORT", "8080")),
 		AdminUsername: getEnv("ADMIN_USERNAME", "admin"),
 		AdminPassword: getEnv("ADMIN_PASSWORD", ""),
 	}
