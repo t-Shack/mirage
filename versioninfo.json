@@ -1,0 +1,27 @@
+{
+    "FixedFileInfo": {
+        "FileVersion": {
+            "Major": 1,
+            "Minor": 0,
+            "Patch": 0,
+            "Build": 0
+        },
+        "ProductVersion": {
+            "Major": 1,
+            "Minor": 0,
+            "Patch": 0,
+            "Build": 0
+        }
+    },
+    "StringFileInfo": {
+        "CompanyName": "Tech Shack",
+        "FileDescription": "Mirage Honeypot Server",
+        "FileVersion": "1.0.0",
+        "InternalName": "Mirage",
+        "LegalCopyright": "Tech Shack",
+        "OriginalFilename": "mirage.exe",
+        "ProductName": "Mirage",
+        "ProductVersion": "1.0.0"
+    },
+    "IconPath": "mirage.ico"
+}

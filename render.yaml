@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: mirage
+    runtime: go
+    buildCommand: go build -buildvcs=false -o mirage .
+    startCommand: ./mirage
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: SERVER_PORT
+        value: 8080
+      - key: ADMIN_USERNAME
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
