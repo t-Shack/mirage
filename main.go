@@ -20,10 +20,15 @@ type Request struct {
 func main() {
 	cfg := LoadConfig()
 
-	connStr := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName,
-	)
+	var connStr string
+	if cfg.DatabaseURL != "" {
+		connStr = cfg.DatabaseURL
+	} else {
+		connStr = fmt.Sprintf(
+			"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			cfg.DBHost, cfg.DBPort, cfg.DBUser, cfg.DBPassword, cfg.DBName,
+		)
+	}
 
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {

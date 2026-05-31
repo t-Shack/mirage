@@ -8,6 +8,7 @@ import (
 )
 
 type Config struct {
+	DatabaseURL   string
 	DBHost        string
 	DBPort        string
 	DBUser        string
@@ -25,12 +26,13 @@ func LoadConfig() Config {
 	}
 
 	return Config{
+		DatabaseURL:   getEnv("DATABASE_URL", ""),
 		DBHost:        getEnv("DB_HOST", "localhost"),
 		DBPort:        getEnv("DB_PORT", "5432"),
 		DBUser:        getEnv("DB_USER", "postgres"),
 		DBPassword:    getEnv("DB_PASSWORD", ""),
 		DBName:        getEnv("DB_NAME", "mirage"),
-		ServerPort:    getEnv("PORT", getEnv("SERVER_PORT", "8080")),
+		ServerPort:    getEnv("SERVER_PORT", "8080"),
 		AdminUsername: getEnv("ADMIN_USERNAME", "admin"),
 		AdminPassword: getEnv("ADMIN_PASSWORD", ""),
 	}
